@@ -1,2 +1,2 @@
-responsys_client
-================
+Responsys
+=========

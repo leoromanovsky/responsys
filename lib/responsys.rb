@@ -1,8 +1,7 @@
 require 'metal/defaultDriver.rb'
 require 'metal/defaultMappingRegistry.rb'
 
-class ResponsysClient
-
+class Responsys
   # Creates a client object to connect to Responsys via SOAP API
   #
   # <username> - The login username

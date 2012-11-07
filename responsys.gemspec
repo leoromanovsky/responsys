@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
-  s.name        = 'responsys_client'
-  s.version     = '0.0.0'
+  s.name        = 'responsys'
+  s.version     = '0.0.1'
   s.platform    = Gem::Platform::RUBY
   s.summary     = 'Responsys Interact API client.'
   s.description = 'A client for interacting with the Responsys API.'
