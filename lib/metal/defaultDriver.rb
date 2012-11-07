@@ -1,5 +1,5 @@
-require 'default.rb'
-require 'defaultMappingRegistry.rb'
+require 'metal/default.rb'
+require 'metal/defaultMappingRegistry.rb'
 require 'soap/rpc/driver'
 
 class ResponsysWS < ::SOAP::RPC::Driver

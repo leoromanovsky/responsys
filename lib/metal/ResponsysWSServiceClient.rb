@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'defaultDriver.rb'
+require 'metal/defaultDriver.rb'
 
 endpoint_url = ARGV.shift
 obj = ResponsysWS.new(endpoint_url)

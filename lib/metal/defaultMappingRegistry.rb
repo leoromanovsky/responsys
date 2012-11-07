@@ -1,4 +1,4 @@
-require 'default.rb'
+require 'metal/default.rb'
 require 'soap/mapping'
 
 module DefaultMappingRegistry
