@@ -9,5 +9,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://github.com/leoromanovsky/responsys_client'
 
   s.files         = `git ls-files`.split("\n")
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
+
+  s.add_dependency('mumboe-soap4r', '~> 1.5.8.5')
 end
