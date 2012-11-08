@@ -21,6 +21,7 @@ class Responsys
     @username = username
     @password = password
     @client = ResponsysWS.new
+    @keep_alive = false
   end
 
   def login
@@ -35,9 +36,8 @@ class Responsys
   end
 
   def assign_session
-    session_header_request = SessionHeader.new
-    session_header_request.sessionId = @session_id
-    @client.headerhandler.add session_header_request
+    session_header_request = SessionHeader.new(@session_id)
+    @client.headerhandler << session_header_request
   end
 
   def logout
@@ -97,7 +97,7 @@ class Responsys
   end
 
   def with_timeout
-    Timeout::timeout(timeout_threshold, ResponsysTimeoutError) do
+    Timeout::timeout(TIMEOUT, ResponsysTimeoutError) do
       yield
     end
   end

@@ -1,4 +1,5 @@
 require 'xsd/qname'
+require 'soap/header/simplehandler'
 
 # {urn:ws.rsys.com}LoginResult
 #   sessionId - SOAP::SOAPString
@@ -1104,13 +1105,18 @@ end
 class ListFolderObjectsResponse < ::Array
 end
 
-# {urn:ws.rsys.com}SessionHeader
-#   sessionId - SOAP::SOAPString
-class SessionHeader
-  attr_accessor :sessionId
+class SessionHeader < SOAP::Header::SimpleHandler
+  NAMESPACE = 'http://ws.rsys.com'
 
-  def initialize(sessionId = nil)
-    @sessionId = sessionId
+  attr_accessor :session_id
+
+  def initialize(session_id)
+    @session_id = session_id
+    super(XSD::QName.new(NAMESPACE, 'Security'))
+  end
+
+  def on_simple_outbound
+    { sessiondId: @session_id }
   end
 end
 
