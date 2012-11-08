@@ -28,7 +28,7 @@ class Responsys
       login_request = Login.new
       login_request.username = @username
       login_request.password = @password
-      response = @responsys_client.login login_request
+      response = @client.login login_request
       @session_id = response.result.sessionId
       assign_session
     end
@@ -37,13 +37,13 @@ class Responsys
   def assign_session
     session_header_request = SessionHeader.new
     session_header_request.sessionId = @session_id
-    @responsys_client.headerhandler.add session_header_request
+    @client.headerhandler.add session_header_request
   end
 
   def logout
     begin
       logout_request = Logout.new
-      @responsys_client.logout logout_request
+      @client.logout logout_request
     ensure
       @session_id = nil
     end
