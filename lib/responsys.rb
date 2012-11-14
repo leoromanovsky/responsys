@@ -57,10 +57,10 @@ class Responsys
   #  Each element in the list is a hash:
   #  {
   #    id: athlete_id,
-  #    email: email address
+  #    email: email address,
+  #    options: {}
   #  }
-  #
-  def send_email(campaign_name, recipients, recipient_options = nil)
+  def send_email(campaign_name, recipients)
     trigger_campaign_message = TriggerCampaignMessage.new
     interact_object = InteractObject.new
     interact_object.folderName = 'ignored'
@@ -68,11 +68,8 @@ class Responsys
     trigger_campaign_message.campaign = interact_object
     trigger_campaign_message.recipientData = []
 
-    recipients.each_with_index do |recipient_info, i|
-      #options = recipient_options[i]
-
-      # Responsys requires something in the optional data for SOAP bindings to work
-      options = {foo: :bar}
+    recipients.each do |recipient_info|
+      options = recipient_info.has_key?(:options) ? recipient_info[:options] : {foo: 'bar'}
 
       recipient = Recipient.new
       recipient.emailAddress = recipient_info[:email] if recipient_info[:email]
