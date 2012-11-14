@@ -69,11 +69,11 @@ class Responsys
     trigger_campaign_message.recipientData = []
 
     recipients.each do |recipient_info|
-      options = recipient_info.has_key?(:options) ? recipient_info[:options] : {foo: 'bar'}
+      options = recipient_info.has_key?('options') ? recipient_info['options'] : {foo: 'bar'}
 
       recipient = Recipient.new
-      recipient.emailAddress = recipient_info[:email] if recipient_info[:email]
-      recipient.customerId = recipient_info[:id] if recipient_info[:id]
+      recipient.emailAddress = recipient_info['email'] if recipient_info['email']
+      recipient.customerId = recipient_info['id'] if recipient_info['id']
       recipient_data = RecipientData.new
       recipient_data.recipient = recipient
       recipient_data.optionalData = []
