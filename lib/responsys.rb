@@ -2,8 +2,11 @@ require 'metal/defaultDriver.rb'
 require 'metal/defaultMappingRegistry.rb'
 
 class Responsys
-  TIMEOUT = 10
+  TIMEOUT = 180
   MAX_MEMBERS = 200
+
+  class TooManyMembersError < StandardError
+  end
 
   class ResponsysTimeoutError < StandardError
   end
@@ -12,16 +15,30 @@ class Responsys
   end
 
   attr_reader :session_id
+  attr_reader :timeout_threshold
 
   # Creates a client object to connect to Responsys via SOAP API
   #
   # <username> - The login username
   # <password> - The login password
-  def initialize(username, password)
+  # <options>
+  #   timeout_threshold - number of seconds (default 180)
+  def initialize(username, password, options)
     @username = username
     @password = password
     @client = ResponsysWS.new
     @keep_alive = false
+
+    self.timeout_threshold = options[:timeout_threshold] || TIMEOUT
+  end
+
+  def timeout_threshold=(secs)
+    # Sets the timeout on the internal responsys http client.
+    @client.options['protocol.http.connect_timeout'] = secs
+    @client.options['protocol.http.send_timeout'] = secs
+    @client.options['protocol.http.receive_timeout']  = secs
+
+    @timeout_threshold = secs
   end
 
   def login
@@ -29,7 +46,7 @@ class Responsys
       login_request = Login.new
       login_request.username = @username
       login_request.password = @password
-      response = @client.login login_request
+      response = @client.login(login_request)
       @session_id = response.result.sessionId
       assign_session
     end
@@ -43,7 +60,7 @@ class Responsys
   def logout
     begin
       logout_request = Logout.new
-      @client.logout logout_request
+      @client.logout(logout_request)
     ensure
       @session_id = nil
     end
@@ -61,6 +78,8 @@ class Responsys
   #    options: {}
   #  }
   def send_email(campaign_name, recipients)
+    raise TooManyMembersError if recipients.size > MAX_MEMBERS
+
     trigger_campaign_message = TriggerCampaignMessage.new
     interact_object = InteractObject.new
     interact_object.folderName = 'ignored'
@@ -94,7 +113,7 @@ class Responsys
   end
 
   def with_timeout
-    Timeout::timeout(TIMEOUT, ResponsysTimeoutError) do
+    Timeout::timeout(timeout_threshold, ResponsysTimeoutError) do
       yield
     end
   end
