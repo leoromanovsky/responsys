@@ -23,7 +23,7 @@ class Responsys
   # <password> - The login password
   # <options>
   #   timeout_threshold - number of seconds (default 180)
-  def initialize(username, password, options)
+  def initialize(username, password, options = {})
     @username = username
     @password = password
     @client = ResponsysWS.new
